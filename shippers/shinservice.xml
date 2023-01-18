@@ -1,0 +1,52 @@
+<options>
+    <Tyres group="tires" item="tire">
+        <VendorCode field="sku" preprocess="cleanword"/>
+        <ShipperCode field="id" preprocess="cleanword"/>
+        <Name field="id"/>
+        <Brand field="brand"/>
+
+        <Model field="model" preprocess="cleanword"/>
+
+        <Diametr field="diam" preprocess="digit" convertType="float"/>
+        <Width field="width" convertType="float"/>
+        <Height field="profile" convertType="float"/>
+        <Season field="season" convertType="custom">
+            <convert from="W" to="зимняя"/>
+            <convert from="S" to="летняя"/>
+        </Season>
+        <Runflat field="runflat" convertType="custom">
+            <convert from="Y" to="1"/>
+        </Runflat>
+        <Pin field="pin" convertType="custom">
+            <convert from="Y" to="1"/>
+        </Pin>
+        <Vehicle default="car"/>
+        <IndexN field="load"/>
+        <IndexS field="speed"/>
+        <Old field="sku" preprocess="checkold" pattern="(2A|3A|4A|5A)"/>
+        <Stock stock="local_stock" field_qty="local_stock" field_cost="price"/>
+        <Stock stock="delivery1" field_qty="delivery1" field_cost="price"/>
+        <Stock stock="delivery2" field_qty="delivery2" field_cost="price"/>
+        <Stock stock="delivery3" field_qty="delivery3" field_cost="price"/>
+    </Tyres>
+    <Wheels group="wheels" item="wheel">
+        <VendorCode field="sku" preprocess="cleanword"/>
+        <ShipperCode field="id" preprocess="cleanword"/>
+        <Name field="id"/>
+        <Brand field="brand"/>
+        <Model field="model" preprocess="cleanword"/>
+        <Diametr field="size" preprocess="divide" divider="/" delta="0" convertType="float"/>
+        <Width field="size" preprocess="divide" divider="/" delta="1" convertType="float"/>
+        <Krep field="bp"  preprocess="digit"/>
+        <PCD field="pcd"  preprocess="digit"/>
+        <ET field="et"  preprocess="digit"/>
+        <DIA field="centerbore"  preprocess="digit"/>
+        <Color field="color"/>
+        <ColorDescription field="type" preprocess="divide" divider="/" delta="1"/>
+        <Type field="type" preprocess="divide" divider="/" delta="0"/>
+        <Stock stock="local_stock" field_qty="local_stock" field_cost="price"/>
+        <Stock stock="delivery1" field_qty="delivery1" field_cost="price"/>
+        <Stock stock="delivery2" field_qty="delivery2" field_cost="price"/>
+        <Stock stock="delivery3" field_qty="delivery3" field_cost="price"/>
+    </Wheels>
+</options>

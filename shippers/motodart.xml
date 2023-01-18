@@ -1,0 +1,14 @@
+<options>
+    <Tyres>
+        <Name no="1"/>
+        <Brand no="4">
+        </Brand>
+        <BrandInclude no="4">
+            <include>KENDA</include>
+            <include>Mitas</include>
+        </BrandInclude>
+        <VendorCode no="3" preprocess="cleancode"/>
+        <ShipperCode no="3" preprocess="cleancode"/>
+        <Stock stock="local_stock" field_qty="2" field_cost="6"/>
+    </Tyres>
+</options>

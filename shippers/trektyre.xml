@@ -1,0 +1,34 @@
+<options>
+    <Tyres group="шины">
+        <Name field="name"/>
+        <VendorCode field="cae" preprocess="cleancode"/>
+        <ShipperCode field="atricle" preprocess="cleancode"/>
+        <Brand field="producer"/>
+        <Model field="model" preprocess="cleanword"/>
+        <Diametr field="radius" preprocess="digit" convertType="float"/>
+        <Width field="width" convertType="float"/>
+        <Height field="h" convertType="float"/>
+        <Season field="season" convertType="custom">
+            <convert from="зима" to="зимняя"/>
+            <convert from="лето" to="летняя"/>
+            <convert from="всесезон" to="всесезонная"/>
+        </Season>
+
+        <Pin field="stud" convertType="custom">
+            <convert from="N" to="0"/>
+            <convert from="Y" to="1"/>
+        </Pin>
+        <IndexN field="li"/>
+        <IndexS field="ss"/>
+        <Runflat field="runflat" convertType="custom">
+            <convert from="Да" to="1"/>
+        </Runflat>
+        <Vehicle field="type" convertType="custom">
+            <convert from="легковые" to="car"/>
+        </Vehicle>
+        <Image field="img"/>
+        <Stock stock="Spb" field_qty="StockSpb" field_cost="price"/>
+        <Stock stock="Order" field_qty="StockOrder" field_cost="price"/>
+        <Stock stock="Waiting" field_qty="StockWaiting" field_cost="price"/>
+    </Tyres>
+</options>

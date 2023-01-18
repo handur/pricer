@@ -1,0 +1,20 @@
+<options>
+    <Tyres item="tires">
+        <VendorCode field="cae" preprocess="cleancode"/>
+        <Stock stock="mkrs" field_qty="rest_mkrs"/>
+        <Stock stock="spb" field_qty="rest_spb"/>
+        <Stock stock="spb_rozn" field_qty="rest_spb_rozn"/>
+        <Stock stock="spb_pish2" field_qty="rest_spb_pish2"/>
+        <Stock stock="spb_pish2_rozn" field_qty="rest_spb_pish2_rozn"/>
+        <Stock stock="yamka" field_qty="rest_yamka"/>
+    </Tyres>
+    <Wheels item="rims">
+        <VendorCode field="cae" preprocess="cleancode"/>
+        <Stock stock="mkrs" field_qty="rest_mkrs"/>
+        <Stock stock="spb" field_qty="rest_spb"/>
+        <Stock stock="spb_rozn" field_qty="rest_spb_rozn"/>
+        <Stock stock="spb_pish2" field_qty="rest_spb_pish2"/>
+        <Stock stock="spb_pish2_rozn" field_qty="rest_spb_pish2_rozn"/>
+        <Stock stock="yamka" field_qty="rest_yamka"/>
+    </Wheels>
+</options>

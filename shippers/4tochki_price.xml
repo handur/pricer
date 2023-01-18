@@ -1,0 +1,30 @@
+<options>
+    <Tyres item="tires">
+        <Name field="name"/>
+        <VendorCode field="cae" preprocess="cleancode"/>
+        <Brand field="brand"/>
+        <Model field="model" preprocess="cleanword"/>
+        <Stock stock="mkrs" field_qty="rest_mkrs" field_cost="price_mkrs"/>
+        <Stock stock="spb" field_qty="rest_spb" field_cost="price_spb"/>
+        <Stock stock="spb_pish2" field_qty="rest_spb_pish2" field_cost="price_spb_pish2" field_cost_if_empty="price_mkrs" />
+        <Stock stock="yamka" field_qty="rest_yamka" field_cost="price_yamka"/>
+        <Stock stock="mrc" field_qty="rest_spb" field_cost="price_spb_rozn"/>
+        <Stock stock="sk2" field_qty="rest_sk2" field_cost="price_sk2"/>
+        <Stock stock="sk3" field_qty="rest_sk3" field_cost="price_sk3"/>
+        <Stock stock="sk4" field_qty="rest_sk4" field_cost="price_sk4"/>
+    </Tyres>
+    <Wheels item="rims">
+        <Name field="name"/>
+        <VendorCode field="cae" preprocess="cleancode"/>
+        <Brand field="brand"/>
+        <Model field="model" preprocess="cleanword"/>
+        <Stock stock="mkrs" field_qty="rest_mkrs" field_cost="price_mkrs"/>
+        <Stock stock="spb" field_qty="rest_spb" field_cost="price_spb"/>
+        <Stock stock="spb_pish2" field_qty="rest_spb_pish2" field_cost="price_spb_pish2" field_cost_if_empty="price_mkrs"/>
+        <Stock stock="yamka" field_qty="rest_yamka" field_cost="price_yamka"/>
+        <Stock stock="mrc" field_qty="rest_spb" field_cost="price_spb_rozn"/>
+        <Stock stock="sk2" field_qty="rest_sk2" field_cost="price_sk2"/>
+        <Stock stock="sk3" field_qty="rest_sk3" field_cost="price_sk3"/>
+        <Stock stock="sk4" field_qty="rest_sk4" field_cost="price_sk4"/>
+    </Wheels>
+</options>

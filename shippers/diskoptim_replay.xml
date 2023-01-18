@@ -1,0 +1,20 @@
+<options>
+    <Wheels item="gd">
+        <Name field="code"/>
+        <VendorCode field="code" preprocess="cleancode" ifemptyField="Артикул"/>
+        <ShipperCode field="code" preprocess="cleancode"/>
+        <Brand field="brand"/>
+        <Model field="model" preprocess="cleanword"/>
+
+        <Diametr field="diameter" preprocess="digit" convertType="float"/>
+        <Width field="width" convertType="float"/>
+        <Krep field="bolts_count"   convertType="digit"/>
+        <PCD field="bolts_spacing" convertType="digit"/>
+        <ET field="et" convertType="digit"/>
+        <DIA field="dia" convertType="digit"/>
+        <Color field="color"/>
+        <Type default="Литой"/>
+        <Image field="image"/>
+        <Stock stock="zakaz" field_qty="count" field_cost="price"/>
+    </Wheels>
+</options>

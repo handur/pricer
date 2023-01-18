@@ -1,0 +1,14 @@
+<options>
+    <Tyres>
+        <Name no="3"/>
+        <VendorCode field="Артикул" preprocess="cleancode"/>
+        <ShipperCode field="Артикул" preprocess="cleancode"/>
+        <Brand field="Производитель"/>
+        <Model field="Модель"/>
+        <Diametr field="Размер" preprocess="pregmatch" pattern="/[\d.]+/" delta="2" convertType="float"/>
+        <Width field="Размер" preprocess="pregmatch" pattern="/[\d]+/" delta="0" convertType="float"/>
+        <Height field="Размер" preprocess="pregmatch" pattern="/[\d]+/" delta="1" convertType="float"/>
+        <Vehicle default="truck"/>
+        <Stock stock="local_stock" field_qty="9" field_cost="7"/>
+    </Tyres>
+</options>

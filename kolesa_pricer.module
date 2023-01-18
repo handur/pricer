@@ -1,0 +1,875 @@
+<?php
+require_once('Pricer/Pricer.inc');
+require_once('includes/KolesaFieldConvert.inc');
+require_once('includes/KolesaFieldMapping.inc');
+require_once('includes/KolesaPricerProduct.inc');
+require_once('includes/KolesaPricerLog.inc');
+require_once('includes/KolesaGetMail.inc');
+require_once('kolesa_pricer.theme.inc');
+require_once('kolesa_pricer.cache.inc');
+require_once('kolesa_pricer.class.inc');
+require_once('kolesa_pricer.shipper.inc');
+require_once('kolesa_pricer.mrc.inc');
+require_once('kolesa_pricer.product.inc');
+require_once('kolesa_pricer.export.inc');
+require_once('kolesa_pricer.node.inc');
+require_once('kolesa_pricer.block.inc');
+
+
+
+function kolesa_pricer_init(){
+    # require_once('kolesa_pricer.helpers.inc');
+    if(arg(0)=='admin'){
+        drupal_add_css(drupal_get_path('module','kolesa_pricer').'/kolesa_pricer.css');
+    }
+    $shippers=kolesa_pricer_get_all_shippers();
+    $shippers_dir=drupal_get_path('module', 'kolesa_pricer'). '/shippers';
+    foreach($shippers as $shipper){
+        #   print_r($shipper->machine_key);
+        $check_uri[]=$shippers_dir.'/'.$shipper->machine_key.'.inc';
+        #   $check_uri[]=$shippers_dir.'/mrc_'.$shipper->machine_key.'.inc';
+    }
+
+    foreach($check_uri as $uri){
+        if(file_exists($uri)) require_once($uri);
+    }
+
+}
+function kolesa_pricer_permission() {
+    $perms=array(
+        'access price admin' => array(
+            'title' => t('Access price admin'),
+        ),
+    );
+    return $perms;
+}
+
+function kolesa_pricer_menu(){
+    $items['catalog']=array(
+        'title'=>'Каталог',
+        'menu_name' => 'management',
+        'page callback'=>'kolesa_pricer_catalog_page',
+        'page arguments'=>array('main'),
+        'file'=>'kolesa_pricer.catalog.inc',
+        'type' => MENU_NORMAL_ITEM,
+        'access arguments'=>array('access price admin'),
+    );
+    $items['catalog/%']=array(
+        'title'=>'Каталог',
+        'menu_name' => 'management',
+        'page callback'=>'kolesa_pricer_catalog_page',
+        'page arguments'=>array('brand',1),
+        'file'=>'kolesa_pricer.catalog.inc',
+        'type' => MENU_NORMAL_ITEM,
+        'access arguments'=>array('access price admin'),
+    );
+    $items['catalog/%/%']=array(
+        'title'=>'Каталог',
+        'menu_name' => 'management',
+        'page callback'=>'kolesa_pricer_catalog_page',
+        'page arguments'=>array('model',1,2),
+        'file'=>'kolesa_pricer.catalog.inc',
+        'type' => MENU_NORMAL_ITEM,
+        'access arguments'=>array('access price admin'),
+    );
+    $items['catalog/%/%/%']=array(
+        'title'=>'Каталог',
+        'menu_name' => 'management',
+        'page callback'=>'kolesa_pricer_catalog_page',
+        'page arguments'=>array('product',1,2,3),
+        'file'=>'kolesa_pricer.catalog.inc',
+        'type' => MENU_NORMAL_ITEM,
+        'access arguments'=>array('access price admin'),
+    );
+    $items['admin/price']=array(
+        'title'=>'Управление прайс-листами',
+        'menu_name' => 'management',
+        'type' => MENU_NORMAL_ITEM,
+        'access arguments'=>array('access price admin'),
+    );
+
+    $items['admin/price/log']=array(
+        'title'=>'Протоколы загрузки',
+        'type' => MENU_NORMAL_ITEM,
+        'menu_name' => 'management',
+        'page callback' => 'kolesa_pricer_log_page',
+        'access arguments'=>array('access price admin'),
+    );
+    $items['admin/price/reports']=array(
+        'title'=>'Отчёты',
+        'type' => MENU_NORMAL_ITEM,
+        'menu_name' => 'management',
+        'access arguments'=>array('access price admin'),
+    );
+
+    $items['admin/price/reports/unknown']=array(
+        'title'=>'Нераспознанные позиции',
+        'type' => MENU_NORMAL_ITEM,
+        'menu_name' => 'management',
+        'page callback' => 'kolesa_pricer_reports_unknown',
+        'access arguments'=>array('access price admin'),
+    );
+    $items['admin/price/reports/unknown/all']=array(
+        'title'=>'Общий отчёт',
+        'type' => MENU_DEFAULT_LOCAL_TASK,
+        'access arguments'=>array('access price admin'),
+        'weight'=>-10,
+    );
+
+    $unknown=kolesa_pricer_reports_get_unknown();
+    $unknownCats=array_keys($unknown);
+    sort($unknownCats);
+    foreach($unknownCats as $cat){
+        $curlink='admin/price/reports/unknown/'.strtolower($cat);
+        $items[$curlink]=array(
+            'title' => $cat,
+            'type' => MENU_LOCAL_TASK,
+            'access arguments'=>array('access price admin'),
+            'page callback'=>'kolesa_pricer_reports_unknown',
+            'page arguments'=>array($cat),
+        );
+    }
+    $items['admin/price/reports/check_prices']=array(
+        'title'=>'Проверка обмена прайсами',
+        'type' => MENU_NORMAL_ITEM,
+        'file'=>'kolesa_pricer.reports.inc',
+        'page callback'=>'kolesa_pricer_reports_check_prices',
+        'access arguments'=>array('access price admin'),
+        'weight'=>-10,
+    );
+    $items['admin/price/reports/load_protocols']=array(
+        'title'=>'Протоколы загрузки',
+        'type' => MENU_NORMAL_ITEM,
+        'file'=>'kolesa_pricer.reports.inc',
+        'page callback'=>'kolesa_pricer_reports_load_protocols',
+        'access arguments'=>array('access price admin'),
+        'weight'=>-10,
+    );
+    $items['admin/price/reports/load_protocols/%']=array(
+        'title'=>'Протоколы загрузки',
+        'type' => MENU_NORMAL_ITEM,
+        'file'=>'kolesa_pricer.reports.inc',
+        'page callback'=>'kolesa_pricer_reports_load_protocols',
+        'page arguments'=>[4],
+        'access arguments'=>array('access price admin'),
+        'weight'=>-10,
+    );
+    $items['admin/price/test']=array(
+        'title'=>'Тест прайсера',
+        'type' => MENU_NORMAL_ITEM,
+        'menu_name' => 'management',
+        'page callback' => 'kolesa_pricer_test_page',
+        'access arguments'=>array('access price admin'),
+    );
+
+    $items['admin/price/mapping']=array(
+        'title'=>'Настройка маппинга',
+        'menu_name'=>'management',
+        'access arguments'=>array('access price admin'),
+    );
+
+    $items['admin/price/mapping/brands']=array(
+        'title'=>'Бренды',
+        'file'=>'kolesa_pricer.mapping.inc',
+        'page callback'=>'drupal_get_form',
+        'page arguments'=>array('kolesa_pricer_mapping_brands_form'),
+        'type'=>MENU_NORMAL_ITEM,
+        'access arguments'=>array('access price admin'),
+    );
+    $items['admin/price/mapping/models']=array(
+        'title'=>'Модели',
+        'file'=>'kolesa_pricer.mapping.inc',
+        'page callback'=>'drupal_get_form',
+        'page arguments'=>array('kolesa_pricer_mapping_models_form'),
+        'type'=>MENU_NORMAL_ITEM,
+        'access arguments'=>array('access price admin'),
+    );
+    $items['ajax_pricer/update_mapping']=array(
+        'page callback'=>'kolesa_pricer_mapping_update_ajax',
+        'file'=>'kolesa_pricer.mapping.inc',
+        'type'=>MENU_CALLBACK,
+        'access arguments'=>array('access price admin'),
+        'delivery callback' => 'ajax_deliver',
+    );
+    $items['admin/price/shipper']=array(
+        'title'=>'Поставщики',
+        'file'=>'kolesa_pricer.shipper.inc',
+        'type' => MENU_NORMAL_ITEM,
+        'menu_name' => 'management',
+        'page callback' => 'kolesa_pricer_shipper_page',
+        'access arguments'=>array('access price admin'),
+    );
+    $items['admin/price/shipper/add']=array(
+        'title'=>'Добавить поставщика',
+        'file'=>'kolesa_pricer.shipper.inc',
+        'type' => MENU_NORMAL_ITEM,
+        'menu_name' => 'management',
+        'page callback' => 'drupal_get_form',
+        'page arguments'=>array('kolesa_pricer_add_shipper_form'),
+        'access arguments'=>array('access price admin'),
+    );
+    $items['admin/price/shipper/%/edit']=array(
+        'title'=>'Поставщики',
+        'file'=>'kolesa_pricer.shipper.inc',
+        'type' => MENU_NORMAL_ITEM,
+        'menu_name' => 'management',
+        'page callback' => 'drupal_get_form',
+        'page arguments'=>array('kolesa_pricer_add_shipper_form',3),
+        'access arguments'=>array('access price admin'),
+    );
+    $items['admin/price/shipper/%/%/view']=array(
+        'title'=>'Поставщики',
+        'file'=>'kolesa_pricer.shipper.inc',
+        'type' => MENU_NORMAL_ITEM,
+        'menu_name' => 'management',
+        'page callback'=>'kolesa_pricer_shipper_view_data',
+        'page arguments'=>array(3,4),
+        'access arguments'=>array('access price admin'),
+    );
+    $items['admin/price/shipper/%/%/excel']=array(
+        'title'=>'Поставщики',
+        'file'=>'kolesa_pricer.shipper.inc',
+        'type' => MENU_NORMAL_ITEM,
+        'menu_name' => 'management',
+        'page callback'=>'kolesa_pricer_shipper_excel_data',
+        'page arguments'=>array(3,4),
+        'access arguments'=>array('access price admin'),
+    );
+    $items['admin/price/shipper/%/pricelist']=array(
+        'title'=>'Остатки',
+        'file'=>'kolesa_pricer.shipper.inc',
+        'type' => MENU_NORMAL_ITEM,
+        'page callback' => 'kolesa_pricer_shipper_price_list',
+        'page arguments' => array(3),
+        'access arguments'=>array('access price admin'),
+    );
+    $items['admin/price/shipper/%/pricelist/%']=array(
+        'title'=>'Остатки',
+        'file'=>'kolesa_pricer.shipper.inc',
+        'type' => MENU_NORMAL_ITEM,
+        'page callback' => 'kolesa_pricer_shipper_price_list',
+        'page arguments' => array(3,5),
+        'access arguments'=>array('access price admin'),
+    );
+    $items['admin/price/shipper/%/products_update']=array(
+        'title'=>'Импорт номенклатуры',
+        'file'=>'kolesa_pricer.shipper.inc',
+        'type' => MENU_NORMAL_ITEM,
+        'page callback' => 'kolesa_pricer_shipper_products_update',
+        'page arguments' => array(3),
+        'access arguments'=>array('access price admin'),
+    );
+    $items['admin/price/shipper/%/price_update']=array(
+        'title'=>'Импорт цен',
+        'file'=>'kolesa_pricer.shipper.inc',
+        'type' => MENU_NORMAL_ITEM,
+        'page callback' => 'kolesa_pricer_shipper_price_update',
+        'page arguments' => array(3),
+        'access arguments'=>array('access price admin'),
+    );
+
+    $items['export_price/%/%/%']=array(
+        'title'=>'Экспорт прайсов',
+        'file'=>'kolesa_pricer.export.inc',
+        'type'=>MENU_CALLBACK,
+        'page callback'=>'kolesa_pricer_export_get_export_file',
+        'page arguments'=>array(1,2,3),
+        'access callback'=>TRUE,
+    );
+    $items['admin/price/%/%/%/view']=array(
+        'title'=>'Экспорт прайсов',
+        'file'=>'kolesa_pricer.export.inc',
+        'type'=>MENU_CALLBACK,
+        'page callback'=>'kolesa_pricer_export_get_export_file',
+        'page arguments'=>array(2,3,4,'view'),
+        'access callback'=>TRUE,
+    );
+    $items['export_price_all/%']=array(
+        'title'=>'Экспорт прайсов',
+        'file'=>'kolesa_pricer.export.inc',
+        'type'=>MENU_CALLBACK,
+        'page callback'=>'kolesa_pricer_export_get_export_data',
+        'page arguments'=>array(1),
+        'access callback'=>TRUE,
+    );
+    return $items;
+}
+function kolesa_pricer_menu_alter(&$items){
+
+
+
+}
+function kolesa_pricer_reports_unknown($cat=NULL){
+    drupal_add_css(drupal_get_path('module','kolesa_pricer')."/kolesa_pricer.css");
+    $build=[];
+    drupal_set_title('Отчёт для '.$cat);
+    $reports= kolesa_pricer_reports_get_unknown();
+    if(!empty($cat)){
+        $curReports=$reports[$cat];
+        $rows=[];
+        foreach($curReports as $pos){
+            $posData=unserialize($pos->data);
+            $stockData=$posData['Stocks'];
+            $stockRows=[];
+            foreach($stockData as $stock){
+                $stockRows[]=[$stock['stock'],$stock['qty']];
+            }
+            $stocks=theme('table',['rows'=>$stockRows,'attributes'=>['class'=>['small']]]);
+            $codeForm=drupal_get_form('kolesa_pricer_add_code_form',$pos->name,$pos->shipper);
+            $rows[]=[
+                'Name'=>$pos->name,
+                'Code'=>drupal_render($codeForm),
+                'Shipper'=>$pos->shipper,
+                'Stocks'=>$stocks,
+
+                'Data'=>kolesa_pricer_reports_prepare_data($posData),
+            ];
+        }
+
+        $header=['Название','Код Товара','Поставщик','Склады','Данные позиции'];
+        $build['report']['#markup']='<p>Всего позиций: '.count($rows).'</p>';
+        $build['table']['#markup']=theme('table',['rows'=>$rows,'header'=>$header]);
+    } else {
+        $all_shippers=db_query("select machine_key, name from {pricer_shipper}")->fetchAllKeyed(0,1);
+        foreach($reports as $cat=>$report){
+            $counts[$cat]=$cat.":&nbsp;".count($report);
+            foreach($report as $pos){
+                if(empty($shippers[$pos->shipper])) $shippers[$pos->shipper]=$all_shippers[$pos->shipper];
+            }
+        }
+        $build['cats']['#prefix']='<h3>Не распозналось позиций:</h3>';
+        $build['cats']['#markup']=theme('item_list',['items'=>$counts]);
+        $build['cats']['#suffix']='<br><hr/><br>';
+        $build['shippers']['#prefix']='<h3>У поставщиков:</h3>';
+        $build['shippers']['#markup']=theme('item_list',['items'=>$shippers]);
+    }
+
+    return $build;
+}
+function kolesa_pricer_get_custom_caes($name){
+    static $caes;
+    if(empty($caes)||empty($caes[$name])){
+        $caes=db_query("select name,cae from {pricer_custom_caes}")->fetchAllKeyed(0,1);
+    }
+    if(!empty($caes[$name]))    return $caes[$name];
+    return NULL;
+}
+function kolesa_pricer_add_code_form($form,&$form_state,$name,$shipper){
+    $form['#attributes']['class'][]='add-code-form';
+    $form['code']=[
+        '#type'=>'textfield',
+        '#size'=>20,
+        '#default_value'=>kolesa_pricer_get_custom_caes($name),
+    ];
+    $form['submit']=[
+        '#type'=>'submit',
+        '#value'=>'S',
+        '#ajax'=>[
+            'callback'=>'kolesa_pricer_add_code_form_ajax',
+            'progress'=>['type'=>'none'],
+        ]
+    ];
+    $form['name']=[
+        '#type'=>'value',
+        '#value'=>$name,
+    ];
+    $form['shipper']=[
+        '#type'=>'value',
+        '#value'=>$shipper,
+
+    ];
+    return $form;
+}
+function kolesa_pricer_add_code_form_ajax($form,&$form_state){
+    $form_state['rebuild']=TRUE;
+}
+function kolesa_pricer_add_code_form_submit($form,&$form_state){
+    $values=$form_state['values'];
+    $name=$values['name'];
+    $code=$values['code'];
+    db_merge("pricer_custom_caes")->key(["name"=>$name])->fields(["name"=>$name,"cae"=>$code])->execute();
+    $form_state['rebuild']=TRUE;
+}
+function kolesa_pricer_reports_prepare_data($data){
+    $rows=[];
+
+    foreach($data as $key=>$value){
+
+        if(!empty($value)&&!is_array($value))     $rows[]=["<b>".$key."</b>",$value];
+
+    }
+    return theme('table',['rows'=>$rows,'attributes'=>['class'=>['small']]]);
+
+}
+
+function kolesa_pricer_reports_get_unknown(){
+    static $reports;
+    if(empty($reports)) {
+        $query = db_query("select * from {pricer_unknown} group by name order by name asc ");
+        foreach ($query as $row) {
+            $reports[$row->category][] = $row;
+        }
+
+    }
+    return $reports;
+}
+function kolesa_pricer_test_page(){
+    $shipperId=6;
+    $shipper=reset(entity_load('shipper',array($shipperId)));
+    $data=kolesa_pricer_shipper_get_data($shipper,'tyres_price',['VendorCode'=>583908]);
+    $row=current($data['Tyres']);
+    $productFactory=KolesaProductFactory::build($row['Category']);
+    if(empty($row['BrandObject'])){
+        if($brand_id=KolesaFieldMapping::getBrand($row)) $row['BrandObject']=$productFactory::loadBrand($brand_id);
+    }
+    if(empty($row['ModelObject'])){
+        if($model_id=KolesaFieldMapping::getModel($row,TRUE)) $row['ModelObject']=$productFactory::loadModel($model_id);
+    }
+    if($product_id=KolesaFieldMapping::getProduct($row)) {
+        $row['Product']=$productFactory::loadProduct($product_id);
+        #if(empty($row['BrandObject'])) $row['BrandObject']=$productFactory::loadBrand($row['brand']);
+      #  $row['ModelObject']=$productFactory::loadModel($row['model']);
+
+    }
+    print_r($row);
+
+    $build=[];
+#    $build[]['#markup']=theme('table',['rows'=>$rows,'header'=>$header]);
+    #$build[]['#markup']='ok';
+    return $build;
+}
+
+function kolesa_pricer_update_all_source(){
+    $shippers=kolesa_pricer_get_active_shippers();
+    foreach($shippers as $shipper) {
+        kolesa_pricer_update_shipper_source($shipper);
+    }
+}
+function kolesa_pricer_update_all_sources_queued(){
+    $shippers=kolesa_pricer_get_active_shippers();
+    $queue = DrupalQueue::get('kolesa_pricer_update_shipper_source');
+    $queue->createQueue();
+    foreach($shippers as $shipper) {
+        $queue->createItem(array('shipper' => $shipper->id));
+    }
+}
+function kolesa_pricer_update_shipper_source_queued($data){
+    $shipper=reset(entity_load('shipper',array($data['shipper'])));
+    kolesa_pricer_update_shipper_source($shipper);
+}
+function kolesa_pricer_update_shipper_source($shipper, $reset=FALSE){
+    $controller = new $shipper->params['controller class'];
+    $controller->preprocess();
+    $allowedPrices=$controller->getAllowedPrices();
+
+    foreach($allowedPrices as $key=>$options){
+        $updateTime=30;
+        if(isset($options['update time'])) $updateTime=$options['update time'];
+        $expiredTime=db_query("select expired from {pricer_data} where shipper=:shipper and type=:type",[":shipper"=>$shipper->machine_key,":type"=>$key])->fetchField();
+     #   $needUpdate=FALSE;
+        $needUpdate=TRUE;
+     /*   if($reset){
+            $needUpdate=TRUE;
+        } else {
+            if(!empty($expiredTime)&&$expiredTime<=time()){
+                $needUpdate=FALSE;
+            } else {
+                $needUpdate=TRUE;
+            }
+        }
+     */
+        if($needUpdate) {
+            KolesaPricerLog::addLog('message','update_source','Обновляем исходник '.$shipper->name.'-'.$key,['time'=>$expiredTime]);
+        } else {
+            KolesaPricerLog::addLog('message','update_source','Пропускаем исходник '.$shipper->name.'-'.$key.' - его время не пришло',['time'=>$expiredTime]);
+            continue;
+        }
+            if($content=$controller->loadData($key,TRUE)){
+     
+                $filename=$options['file id'].'.raw';
+                file_unmanaged_save_data($content,"public://pricer/".$filename,FILE_EXISTS_REPLACE );
+                $getHash=md5($content);
+                $shipper->updated=date("Y-m-d H:i:s");
+                db_merge('pricer_data')->key(['shipper'=>$shipper->machine_key,'type'=>$key])->fields([
+                    'shipper'=>$shipper->machine_key,
+                    'type'=>$key,
+                    'hash'=>$getHash,
+                    'expired'=>time()+$updateTime*30,
+                ])->execute();
+            }
+    }
+
+    kolesa_pricer_shipper_save($shipper);
+}
+
+function kolesa_pricer_get_all_mrc(){
+    $shippers=kolesa_pricer_get_mrc_shippers();
+    $mrcData=array();
+    foreach($shippers as $shipper){
+        if($shipper->params['mrc']['update type']=='custom'){
+            $class=$shipper->params['mrc']['controller class'];
+            if(class_exists($class)){
+                $controller=new $class;
+                $mrcData=$controller->getMRC();
+            }
+        }
+    }
+    return $mrcData;
+}
+
+function kolesa_pricer_log_page(){
+    drupal_add_library('system', 'drupal.collapse');
+
+    $type='';
+    $time_from='';
+    $time_to='';
+    $log=KolesaPricerLog::viewLog($type, $time_from, $time_to);
+    $header=array('Время','Тип','Процесс','Сообщение','DATA');
+
+    $total=count($log);
+    $num_per_page = 30;
+    $page = pager_default_initialize($total, $num_per_page);
+    $log_slice=array_slice($log,$page*$num_per_page, $num_per_page);
+    foreach($log_slice as $row){
+        $rows[]=array(
+            theme('pricer_log_element',array('element'=>'created','row'=>$row)),
+            theme('pricer_log_element',array('element'=>'type','row'=>$row)),
+            theme('pricer_log_element',array('element'=>'process','row'=>$row)),
+            theme('pricer_log_element',array('element'=>'message','row'=>$row)),
+            theme('pricer_log_element',array('element'=>'data','row'=>$row)),
+        );
+    }
+
+    $filterForm=drupal_get_form('kolesa_pricer_log_form',$log);
+    $build['filter']['#markup']=drupal_render($filterForm);
+    $build['result']['#markup']=theme('table',array('header'=>$header,'rows'=>$rows,'attributes'=>array('class'=>array('pricer_log_table'))));
+    $build['pager']['#markup']=theme('pager');
+    return $build;
+}
+
+function kolesa_pricer_log_form($form,&$form_state){
+    $form['#theme']='kolesa_pricer_log_form';
+    $rows=$form_state['build_info']['args'][0];
+    $options=[];
+    foreach($rows as $row){
+        $allowed=array('time'=>date("d.m.Y", strtotime($row['created'])),'type'=>$row['type'],'process'=>$row['process']);;
+        foreach($allowed as $key=>$el){
+            if(!in_array($el,$options[$key])) $options[$key][$el]=$el;
+        }
+    }
+    array_walk($options,function(&$items,$key){
+        asort($items);
+    });
+    foreach($options as $key=>$options_list){
+        if($key=='time'){
+            $form['time_from']=array(
+                '#type'=>'date_popup',
+                '#title'=>'От даты',
+                '#label'=>'',
+                '#date_format' => 'd.m.Y',
+                '#default_value' => $defDate,
+
+            );
+            $form['time_to']=array(
+                '#type'=>'date_popup',
+                '#title'=>'До даты',
+                '#label'=>'',
+                '#date_format' => 'd.m.Y',
+                '#default_value' => $defDate,
+
+            );
+            continue;
+        }
+        $form[$key]=array(
+            '#type'=>'checkboxes',
+            '#options'=>$options_list,
+            '#title'=>$key,
+        );
+    }
+    $form['submit']=array(
+        '#type'=>'submit',
+        '#value'=>'Фильтр'
+    );
+    return $form;
+}
+
+
+
+function kolesa_batch_download_xml_price(){
+    $shippers=kolesa_pricer_get_active_shippers();
+    $loadedFiles=[];
+    foreach($shippers as $shipper){
+        if($shipper->params['update type']=='custom'){
+            $controllerName=$shipper->params['controller class'];
+
+            if(class_exists($controllerName)){
+                $controller=new $controllerName;
+                $allowedPrices=$controller->getAllowedPrices();
+                $shipperName=$controller->getShipperName();
+                foreach($allowedPrices as $type=>$price){
+                    $fid=NULL;
+                    $loadFile=$price['load url'];
+                    $toFile=$shipperName.'_'.$type;
+
+                    $destination="public://pricer/".$toFile.".xml";
+                    $fid=array_search($loadFile,$loadedFiles);
+                    if(empty($fid)){
+                        $data = $controller->loadData($type, TRUE);
+                        if($res=file_save_data($data,$destination,FILE_EXISTS_REPLACE)) {
+                            $fid = $res->fid;
+                            $loadedFiles[$fid] = $loadFile;
+                        }
+                    }
+                    if(!empty($fid)) kolesa_pricer_set_price_cache($shipperName, $type, $fid, time() + 60 * 60);
+
+                }
+                #file_put_contents('test.xml', gzdecode(stream_get_contents(fopen($url, 'rb'))));
+            }
+        }
+    }
+}
+function kolesa_pricer_check_expired_price($options){
+    $priceData=reset(kolesa_pricer_get_price_cache(['shipper'=>$options['shipper'],'type'=>$options['type']]));
+    if($priceData){
+        $expired=$priceData['expired'];
+        if(time()>$expired) return TRUE;
+        else return FALSE;
+    } else return TRUE;
+}
+function kolesa_pricer_get_price_cache($options){
+    $query=db_select("pricer_data","p")->fields("p");
+    if(isset($options['shipper'])) $query->condition('shipper',$options['shipper']);
+    if(isset($options['type'])) $query->condition('type',$options['type']);
+    $query->condition('expired',time(),'<=');
+    $result=$query->execute()->fetchAllAssoc('id',PDO::FETCH_ASSOC);
+    return $result;
+}
+function kolesa_pricer_set_price_cache($shipper,$type,$fid,$expired){
+    $query=db_merge("pricer_data")->key(
+        [
+            'shipper'=>$shipper,
+            'type'=>$type
+        ]
+    );
+    $query->fields(
+        [
+            'shipper'=>$shipper,
+            'type'=>$type,
+            'fid'=>$fid,
+            'expired'=>$expired,
+        ]
+    );
+    $result=$query->execute();
+    return $result;
+}
+
+function kolesa_pricer_cronapi($op, $job = null)
+{
+    $items = array();
+
+    $items['kolesa_pricer_update_all_sources']=[
+        'description'=>'Update all sources from shippers',
+        'rule'=>'0 */2 * * *',
+        'callback'=>'kolesa_pricer_update_all_sources_queued',
+    ];
+    $items['kolesa_pricer_shippers_preprocess']=[
+        'rule'=>'0 * * * *',
+        'callback'=>'kolesa_pricer_shippers_preprocess',
+    ];
+    $items['kolesa_pricer_shippers_get_prices'] = array('description' => 'Get price from shippers', 'rule' => '10 */2 * * *',  'callback' => 'kolesa_pricer_shippers_get_prices');
+#    $items['kolesa_pricer_shippers_update_mapping'] = array( 'description' => 'Update shippers', 'rule' => '0 * * * *', 'arguments' => array('mapping'), 'callback' => 'kolesa_pricer_shippers_cron');
+    $items['kolesa_pricer_shippers_update_products'] = array( 'description' => 'Update shippers', 'rule' => '20,50 */2 * * *', 'arguments' => array('products'), 'callback' => 'kolesa_pricer_shippers_cron');
+    $items['kolesa_pricer_shippers_update_price'] = array( 'description' => 'Update shippers', 'rule' => '20 */2 * * *', 'arguments' => array('price'), 'callback' => 'kolesa_pricer_shippers_cron');
+    $items['kolesa_pricer_shippers_update_qty'] = array( 'description' => 'Update shippers', 'rule' => '*/10 * * * *', 'arguments' => array('qty'), 'callback' => 'kolesa_pricer_shippers_cron');
+    return $items;
+}
+function kolesa_pricer_shippers_preprocess(){
+    #$sources=['buy@buywheel.ru','price@voshod-avto.ru','opt@motodart.ru','spb-kama@yandex.ru'];
+    #$process=KolesaGetMail::getMail();
+    $shippers=kolesa_pricer_get_active_shippers();
+
+}
+function kolesa_pricer_shippers_get_prices(){
+    $queue = DrupalQueue::get('kolesa_pricer_shipper_get_price');
+    $queue->createQueue();
+    $shippers=kolesa_pricer_get_active_shippers();
+    foreach($shippers as $shipper) {
+        $controller=new $shipper->params['controller class'];
+        $options=$controller->getAllowedPrices();
+        foreach($options as $key=>$option){
+            $queue->createItem(array('shipper' => $shipper,'option'=>$key));
+        }
+    }
+}
+
+function kolesa_pricer_shipper_get_price($data){
+    $shipper=$data['shipper'];
+    $option=$data['option'];
+    $date1=date('h:i:s');
+    $price=kolesa_pricer_shipper_get_data($shipper,$option);
+    $date2=date('h:i:s');
+    KolesaPricerLog::addLog('message','pricerCron','Получаем прайс '.$key.' для '.$shipper->name.' ('.$date1." - ".$date2.")", $option);
+    if(empty($price)) return;
+}
+
+function kolesa_pricer_shippers_cron($type){
+    $shippers=kolesa_pricer_get_active_shippers();
+    $queue = DrupalQueue::get('kolesa_pricer_shipper_update');
+    $queue->createQueue();
+    $sessionId=substr(md5(mt_rand()), 0, 10);
+    $queue->createItem(array('mode'=>'start','type'=>$type,'sessionId'=>$sessionId));
+    foreach($shippers as $shipper){
+        $controller=new $shipper->params['controller class'];
+        $options=$controller->getAllowedPrices();
+        foreach($options as $key=>$option){
+            if($option['queued']==$type){
+                $queue->createItem(array('mode'=>'process','type'=>$type,'shipper' => $shipper,'option'=>$key,'sessionId'=>$sessionId));
+                KolesaPricerLog::addLog('message','pricerCron','Запускаем обновление '.$key.' для '.$shipper->name, $option);
+            }
+        }
+    }
+    $queue->createItem(array('mode'=>'finish','type'=>$type,'sessionId'=>$sessionId));
+}
+
+function kolesa_pricer_cron_queue_info() {
+    $queues = array();
+    $queues['kolesa_pricer_update_shipper_source']=array('worker callback' => 'kolesa_pricer_update_shipper_source_queued', 'time' => 60);
+    $queues['kolesa_pricer_shipper_get_price']=array('worker callback' => 'kolesa_pricer_shipper_get_price', 'time' => 60);
+    $queues['kolesa_pricer_shipper_update'] = array('worker callback' => 'kolesa_pricer_shipper_update', 'time' => 60);
+    /*$queues['kolesa_pricer_shipper_mapping_update'] = array('worker callback' => 'kolesa_pricer_shipper_mapping_update', 'time' => 50);
+   $queues['kolesa_pricer_shipper_products_update'] = array('worker callback' => 'kolesa_pricer_shipper_products_update', 'time' => 50);
+ */
+    $queues['kolesa_pricer_shipper_products_update'] = array('worker callback' => 'kolesa_pricer_shipper_products_update', 'time' => 50);
+    $queues['kolesa_pricer_shipper_price_update'] = array('worker callback' => 'kolesa_pricer_shipper_price_update', 'time' => 50);
+    $queues['kolesa_pricer_shipper_qty_update'] = array('worker callback' => 'kolesa_pricer_shipper_qty_update', 'time' => 50);
+
+    return $queues;
+}
+function kolesa_pricer_shipper_update($data){
+    $mode=$data['mode'];
+    $type=$data['type'];
+    $updateSessionId = $data['sessionId'];
+    if($mode=='start'){
+        KolesaPricerLog::addSessionLog($updateSessionId,$type,'startSession');
+    }
+    if($mode=='finish'){
+        db_truncate("pricer_price_export")->execute();
+        db_query("INSERT INTO {pricer_price_export} SELECT * FROM {pricer_price}");
+        KolesaPricerLog::addSessionLog($updateSessionId,$type,'finishSession');
+    }
+    if($mode=='process') {
+        $time1=microtime(TRUE);
+        $shipper = $data['shipper'];
+        $option = $data['option'];
+        $price = kolesa_pricer_shipper_get_data($shipper, $option);
+        KolesaPricerLog::addSessionLog($updateSessionId,$type,'process '.$shipper->id);
+        if (empty($price)) {
+            KolesaPricerLog::addSessionLog($updateSessionId,$type,'error - empty price '.$shipper->id);
+            return;
+        }
+        $controller = new $shipper->params['controller class'];
+        $controller->shipperId = $shipper->id;
+        $options = $controller->getAllowedPrices()[$option];
+        $queued_key = $options['queued'];
+        $importOptions = array(
+            'shipper' => $shipper,
+            'controller' => $controller,
+            'option' => $option,
+        );
+
+        $queue_name = 'kolesa_pricer_shipper_' . $queued_key . '_update';
+        if ($queue = DrupalQueue::get($queue_name)) {
+            $queue->createItem(array('mode' => 'start', 'rows' => [], 'importOptions' => $importOptions, 'session_id' => $updateSessionId));
+            foreach ($price as $catName => $catPrice) {
+                $priceChunk = array_chunk($catPrice, 50);
+                $chunkCount = count($priceChunk);
+                foreach ($priceChunk as $no => $chunk) {
+                    $queue->createItem(array('mode' => 'process', 'rows' => $chunk, 'importOptions' => $importOptions, 'no' => $no, 'all' => $chunkCount, 'session_id' => $updateSessionId));
+                }
+            }
+            $queue->createItem(array('mode' => 'finish', 'rows' => [], 'importOptions' => $importOptions, 'session_id' => $updateSessionId));
+        }
+        $time2=microtime(TRUE);
+        KolesaPricerLog::addSessionLog($updateSessionId,$type.'_time',$shipper->id." time: ".($time2-$time1));
+    }
+}
+
+function kolesa_pricer_shipper_products_update($data){
+    $mode=$data['mode'];
+    $rows=$data['rows'];
+    $importOptions=$data['importOptions'];
+
+    $controller=$importOptions['controller'];
+    $controller->setSessionId($data['session_id']);
+    if($mode=='start'){
+      #  KolesaPricerLog::addSessionLog($data['session_id'],'products_update','start');
+        $controller->updateData_before($importOptions['option']);
+        KolesaPricerLog::addLog('message','queue_update_products_start','Запустили обновление позиций для '.$importOptions['shipper']->name);
+    } elseif($mode=='finish'){
+     #   KolesaPricerLog::addSessionLog($data['session_id'],'products_update','finish');
+        $controller->updateData_after($importOptions['option']);
+        KolesaPricerLog::addLog('message','queue_update_products_finish','Завершили обновление позиций для '.$importOptions['shipper']->name);
+    } elseif($mode=='process'){
+        $count=$data['no'].'/'.$data['all'];
+        #   KolesaPricerLog::addLog('message','queue_update_products_process','Обновляем позиции '.count($rows).'шт. ('.$count.') для '.$importOptions['shipper']->name);
+        $controller->updateData($importOptions['option'],$rows,$data['session_id']);
+    }
+}
+
+function kolesa_pricer_shipper_mapping_update($data){
+    $mode=$data['mode'];
+    $rows=$data['rows'];
+    $importOptions=$data['importOptions'];
+
+    $controller=$importOptions['controller'];
+    if($mode=='start'){
+        KolesaPricerLog::addLog('message','queue_update_products_start','Запустили обновление позиций для '.$importOptions['shipper']->name);
+    } elseif($mode=='finish'){
+        KolesaPricerLog::addLog('message','queue_update_products_start','Завершили обновление позиций для '.$importOptions['shipper']->name);
+    } elseif($mode=='process'){
+        $count=$data['no'].'/'.$data['all'];
+        #   KolesaPricerLog::addLog('message','queue_update_products_process','Обновляем позиции '.count($rows).'шт. ('.$count.') для '.$importOptions['shipper']->name);
+        $controller->updateData($importOptions['option'],$rows);
+    }
+}
+
+
+function kolesa_pricer_shipper_price_update($data){
+    $mode=$data['mode'];
+    $rows=$data['rows'];
+    $importOptions=$data['importOptions'];
+    $controller=$importOptions['controller'];
+    $controller->setSessionId($data['session_id']);
+    if($mode=='start'){
+      #  KolesaPricerLog::addSessionLog($data['session_id'],'price_update','start');
+        KolesaPricerLog::addLog('message','queue_update_price_start','Запустили обновление цен для '.$importOptions['shipper']->name);
+        $controller->updateStocks_before($importOptions['option']);
+    } elseif($mode=='finish'){
+    #    KolesaPricerLog::addSessionLog($data['session_id'],'price_update','finish');
+        KolesaPricerLog::addLog('message','queue_update_price_end','Завершили обновление цен для '.$importOptions['shipper']->name);
+        $controller->updateStocks_after($importOptions['option']);
+    } elseif($mode=='process'){
+        $count=$data['no'].'/'.$data['all'];
+
+        #  KolesaPricerLog::addLog('message','queue_update_price_process','Обновляем цены '.count($rows).'шт. ('.$count.')  для '.$importOptions['shipper']->name);
+        $controller->updateData($importOptions['option'],$rows,$data['session_id']);
+    }
+}
+
+
+function kolesa_pricer_shipper_qty_update($data){
+    $mode=$data['mode'];
+    $rows=$data['rows'];
+    $importOptions=$data['importOptions'];
+    $controller=$importOptions['controller'];
+    if($mode=='start'){
+        KolesaPricerLog::addLog('message','qty_update','Обнуляем QTY для '.$importOptions['shipper']->name);
+        $shipper=$importOptions['shipper'];
+        $stocks=$shipper->stocks;
+        db_delete('pricer_qty')->condition('stock',array_keys($stocks))->execute();
+    } elseif($mode=='finish'){
+
+    } elseif($mode=='process') {
+        $controller->updateData($importOptions['option'], $rows);
+    }
+}

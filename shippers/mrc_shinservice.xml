@@ -1,0 +1,8 @@
+<options>
+        <Tyres>
+                <VendorCode no="3" preprocess="cleanword"/>
+                <Brand no="5"/>
+                <Name no="8"/>
+                <Stock stock="mrc" field_cost="10"/>
+        </Tyres>
+</options>

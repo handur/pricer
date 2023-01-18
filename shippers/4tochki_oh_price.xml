@@ -1,0 +1,18 @@
+<options>
+    <Tyres item="tires">
+        <Name field="name"/>
+        <VendorCode field="cae" preprocess="cleancode"/>
+        <Brand field="brand"/>
+        <Model field="model" preprocess="cleanword"/>
+        <Stock stock="spb_sm" field_qty="rest_spb_sm" field_cost="price_spb_sm"/>
+        <Stock stock="spb_sm2" field_qty="rest_spb_sm2" field_cost="price_spb_sm2"/>
+    </Tyres>
+    <Wheels item="rims">
+        <Name field="name"/>
+        <VendorCode field="cae" preprocess="cleancode"/>
+        <Brand field="brand"/>
+        <Model field="model" preprocess="cleanword"/>
+        <Stock stock="spb_sm" field_qty="rest_spb_sm" field_cost="price_spb_sm" />
+        <Stock stock="spb_sm2" field_qty="rest_spb_sm2" field_cost="price_spb_sm2" />
+    </Wheels>
+</options>

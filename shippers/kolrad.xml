@@ -1,0 +1,27 @@
+<options>
+    <Wheels>
+        <Name field="ТМЦ"/>
+        <VendorCode field="КодЗавода" preprocess="cleancode"/>
+        <ShipperCode field="Код" preprocess="cleancode"/>
+        <TypeInclude field="Вид диска">
+            <include>Литые диски</include>
+            <include>Штампованные диски</include>
+        </TypeInclude>
+        <Brand field="Фирма"/>
+        <Model field="Модель" preprocess="cleanword"/>
+        <Diametr field="Диаметр" preprocess="digit"/>
+        <Width field="Ширина" preprocess="digit"/>
+        <Krep field="PCD1" preprocess="digit"/>
+        <PCD field="PCD2" preprocess="digit"/>
+        <ET field="ET" preprocess="digit"/>
+        <DIA field="dia" preprocess="digit"/>
+        <Color field="Цвет"/>
+        <Type field="Вид диска" convertType="custom">
+            <convert from="Литые диски" to="Литой"/>
+            <convert from="Штампованные диски" to="Штампованный"/>
+        </Type>
+        <Image field="Фотография"/>
+        <Stock stock="spb" field_qty="Кол-во" field_cost="Цена"/>
+        <Stock stock="zakaz" field_qty="Товары в пути" field_cost="Цена"/>
+    </Wheels>
+</options>

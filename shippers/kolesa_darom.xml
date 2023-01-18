@@ -1,0 +1,83 @@
+<options>
+    <Wheels group="disk">
+        <Name field="name"/>
+        <VendorCode field="vendor_code" preprocess="cleancode"/>
+        <ShipperCode field="product_id" preprocess="cleancode"/>
+        <Brand field="maker"/>
+        <Model field="categoryname">
+            <process conditionfield="maker" conditionvalue="ТЗСК" remove="Тольятти"/>
+            <process conditionfield="maker" conditionvalue="Trebl" remove="TREBL"/>
+            <process conditionfield="maker" conditionvalue="LegeArtis" remove="\(L.A.\)"/>
+            <process conditionfield="maker" conditionvalue="КиК Серия Реплика" remove="\([^)]*\)+"/>
+            <process conditionfield="maker" conditionvalue="KHOMEN" remove="\([^)]*\)+"/>
+        </Model>
+        <Diametr field="radius" preprocess="digit" convertType="float"/>
+        <Width field="shirina_diska" convertType="float"/>
+        <Krep field="boltnum"  preprocess="digit"/>
+        <PCD field="boltdistance"  preprocess="digit"/>
+        <ET field="et"  preprocess="digit"/>
+        <DIA field="dia"  preprocess="digit"/>
+        <Color field="name" preprocess="lastword"/>
+        <Type field="material"/>
+    </Wheels>
+    <Tyres group="shina">
+        <Name field="name"/>
+        <VendorCode field="vendor_code" preprocess="cleancode"/>
+        <ShipperCode field="product_id" preprocess="cleancode"/>
+
+        <Brand field="maker"/>
+
+        <Model field="categoryname" preprocess="cleanword">
+            <process conditionfield="maker" conditionvalue="АШК" remove="\([^)]*\)+"/>
+        </Model>
+
+        <Diametr field="radius" convertType="float"/>
+        <Width field="shirina_secheniya"  preprocess="digit" convertType="float"/>
+        <Height field="visota_secheniya"  preprocess="digit" convertType="float"/>
+        <Season field="seasonality" convertType="custom">
+                <convert from="Зима" to="зимняя"/>
+                <convert from="Лето" to="летняя"/>
+                <convert from="Всесезонные" to="всесезонная"/>
+        </Season>
+        <Pin field="ship" convertType="custom">
+            <convert from="Нешипованные" to="0"/>
+            <convert from="Шипованные" to="1"/>
+        </Pin>
+        <IndexN field="index_loading"/>
+        <IndexS field="index_speed"/>
+        <Runflat field="runflat" convertType="custom">
+            <convert from="Да" to="1"/>
+        </Runflat>
+        <Vehicle default="car"/>
+    </Tyres>
+    <Moto group="moto" >
+        <Name field="name"/>
+        <VendorCode field="vendor_code" preprocess="cleancode"/>
+        <ShipperCode field="product_id" preprocess="cleancode"/>
+
+        <Brand field="maker"/>
+
+        <Model field="categoryname" preprocess="cleanword"/>
+
+        <Diametr field="radius" convertType="float"/>
+        <Width field="shirina_secheniya"  preprocess="digit" convertType="float"/>
+        <Height field="visota_secheniya"  preprocess="digit" convertType="float"/>
+        <Season field="seasonality" convertType="custom">
+            <convert from="Зима" to="зимняя"/>
+            <convert from="Лето" to="летняя"/>
+            <convert from="Всесезонные" to="всесезонная"/>
+        </Season>
+        <Pin field="ship" convertType="custom">
+            <convert from="Нешипованные" to="0"/>
+            <convert from="Шипованные" to="1"/>
+        </Pin>
+        <IndexN field="index_loading"/>
+        <IndexS field="index_speed"/>
+        <Runflat field="runflat" convertType="custom">
+            <convert from="Да" to="1"/>
+        </Runflat>
+        <Vehicle default="moto"/>
+        <Use field="AreaOfUse"/>
+        <Axis field="axis"/>
+    </Moto>
+</options>

@@ -1,0 +1,15 @@
+<options>
+    <Tyres>
+        <Name field="Description"/>
+        <VendorCode field="Art 1" preprocess="cleancode"/>
+        <ShipperCode field="Art 1" preprocess="cleancode"/>
+        <Brand default="Yokohama"/>
+        <Model field="Pattern"/>
+        <Diametr field="Size" preprocess="pregmatch" pattern="/[\d]+/" delta="2" convertType="float"/>
+        <Width field="Size" preprocess="pregmatch" pattern="/[\d]+/" delta="0" convertType="float"/>
+        <Height field="Size" preprocess="pregmatch" pattern="/[\d]+/" delta="1" convertType="float"/>
+        <Season default="летняя"/>
+        <Vehicle default="sport"/>
+        <Stock stock="spb" field_qty="Кол-во" field_cost="YRUS price"/>
+    </Tyres>
+</options>

@@ -1,0 +1,14 @@
+<Options>
+    <Wheels>
+        <Brand entity_type="taxonomy_term" vid="3"/>
+        <DiskType entity_type="taxonomy_term" vid="9"/>
+        <DiskColor entity_type="taxonomy_term" vid="10"/>
+        <Model entity_type="node" type="disk"/>
+    </Wheels>
+    <Tyres>
+        <Brand entity_type="taxonomy_term" vid="2"/>
+        <CarType entity_type="taxonomy_term" vid="6"/>
+        <Season entity_type="taxonomy_term" vid="4"/>
+        <Model entity_type="node" type="shina"/>
+    </Tyres>
+</Options>

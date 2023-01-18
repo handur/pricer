@@ -1,0 +1,66 @@
+<options>
+    <Tyres item="tires" vid="2" bundle="shina" entityType="shina_razmer">
+        <Name field="name"/>
+        <VendorCode field="cae" preprocess="cleancode"/>
+        <ShipperCode field="cae" preprocess="cleancode"/>
+        <Product field="cae" preprocess="cleancode" convertType="product" bundle="shina_razmer"/>
+        <Brand field="brand"/>
+        <BrandTerm field="brand" convertType="brand"/>
+        <Model field="model" preprocess="cleanword"/>
+        <ModelNode field="model" preprocess="cleanword" convertType="model"/>
+        <Diametr field="diameter" preprocess="digit" convertType="float"/>
+        <Width field="width" convertType="float"/>
+        <Height field="height" convertType="float"/>
+        <Season field="season" convertType="custom">
+            <convert from="Зимняя" to="зимняя"/>
+            <convert from="Летняя" to="летняя"/>
+            <convert from="Всесезонная" to="всесезонная"/>
+        </Season>
+        <SeasonTerm field="season" convertType="custom">
+            <convert from="Зимняя" to="28119"/>
+            <convert from="Летняя" to="28118"/>
+            <convert from="Всесезонная" to="28520"/>
+        </SeasonTerm>
+        <Pin field="is_studded" convertType="custom">
+            <convert from="не шип" to="0"/>
+            <convert from="шип" to="1"/>
+        </Pin>
+        <IndexN field="load_index"/>
+        <IndexS field="speed_index"/>
+        <Vehicle field="tiretype" convertType="custom">
+            <convert from="Легковая" to="car"/>
+            <convert from="Грузовая" to="truck"/>
+            <convert from="Спецшина" to="truck"/>
+            <convert from="Мотошина" to="moto"/>
+        </Vehicle>
+        <VehicleTerm field="tiretype" convertType="custom">
+            <convert from="Легковая" to="28422"/>
+            <convert from="Грузовая" to="28419"/>
+            <convert from="Спецшина" to="28419"/>
+        </VehicleTerm>
+        <Runflat field="runflat" convertType="custom">
+            <convert from="Да" to="1"/>
+        </Runflat>
+        <Reinforced field="reinforced" convertType="custom">
+            <convert from="Да" to="1"/>
+        </Reinforced>
+    </Tyres>
+    <Wheels item="rims" vid="3" bundle="disk" entityType="disk_razmer">
+        <Name field="name"/>
+        <VendorCode field="cae" preprocess="cleancode"/>
+        <ShipperCode field="cae" preprocess="cleancode"/>
+        <Brand field="brand"/>
+        <Model field="model" preprocess="cleanword"/>
+        <Product field="cae" preprocess="cleancode" convertType="product"/>
+        <BrandTerm field="brand" convertType="brand"/>
+        <ModelNode field="model" preprocess="cleanword" convertType="model"/>
+        <Diametr field="diameter" preprocess="digit" convertType="float"/>
+        <Width field="width" convertType="float"/>
+        <Krep field="bolts_count"/>
+        <PCD field="bolts_spacing"/>
+        <ET field="et"/>
+        <DIA field="dia"/>
+        <Color field="color"/>
+        <ColorTerm field="color" convertType="taxonomy" vid="8"/>
+    </Wheels>
+</options>

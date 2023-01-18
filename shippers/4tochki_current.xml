@@ -1,0 +1,70 @@
+<options>
+    <Tyres item="tires">
+        <Name field="name"/>
+        <GTIN field="gtin"/>
+        <VendorCode field="cae" preprocess="cleancode"/>
+        <ShipperCode field="cae" preprocess="cleancode"/>
+        <Brand field="brand"/>
+
+        <Model field="model" preprocess="cleanword"/>
+
+
+        <Diametr field="diameter" preprocess="digit" convertType="float"/>
+        <Width field="width" convertType="float"/>
+        <Height field="height" convertType="float"/>
+        <Season field="season" convertType="custom">
+            <convert from="Зимняя" to="зимняя"/>
+            <convert from="Летняя" to="летняя"/>
+            <convert from="Всесезонная" to="всесезонная"/>
+        </Season>
+
+        <Pin field="thorn" convertType="custom" default="Нет">
+            <convert from="Нет" to="0"/>
+            <convert from="Да" to="1"/>
+        </Pin>
+        <IndexN field="load_index"/>
+        <IndexS field="speed_index"/>
+        <Vehicle field="tiretype" convertType="custom">
+            <convert from="Легковая" to="car"/>
+            <convert from="Грузовая" to="truck"/>
+            <convert from="Спецшина" to="truck"/>
+            <convert from="Мотошина" to="moto"/>
+        </Vehicle>
+
+        <Runflat field="runflat" default="0" convertType="custom">
+            <convert from="Да" to="1"/>
+        </Runflat>
+        <Omologation field="omolog"/>
+        <Usil field="usa"/>
+        <XL field="tonnage"/>
+        <Reinforced field="reinforced" default="0" convertType="custom">
+            <convert from="Да" to="1"/>
+        </Reinforced>
+        <Image field="img_big_my"/>
+    </Tyres>
+    <Wheels item="rims" >
+        <Name field="name"/>
+        <VendorCode field="cae" preprocess="cleancode"/>
+        <ShipperCode field="cae" preprocess="cleancode"/>
+        <Brand field="brand"/>
+
+        <Model field="model" preprocess="cleanword"  pattern="-оригинал"/>
+
+        <Diametr field="diameter" preprocess="digit" convertType="float"/>
+        <Width field="width" convertType="float"/>
+        <Krep field="bolts_count"/>
+        <PCD field="bolts_spacing"/>
+        <ET field="et"/>
+        <DIA field="dia"/>
+        <Color field="color"/>
+        <Type field="rim_type"/>
+        <Image field="img_big_my"/>
+    </Wheels>
+    <Krep item="fastener">
+        <Name field="name"/>
+        <VendorCode field="cae" preprocess="cleancode"/>
+        <Brand field="brand"/>
+        <Image field="img_big_my"/>
+        <Type field="sub_type"/>
+    </Krep>
+</options>

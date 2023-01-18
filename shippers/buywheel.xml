@@ -1,0 +1,17 @@
+<options>
+    <Tyres>
+        <Name field="Номенклатура"/>
+        <VendorCode field="Код произв." preprocess="cleancode"/>
+        <ShipperCode field="Код произв." preprocess="cleancode"/>
+        <Brand field="Бренд"/>
+        <Model field="Модель"/>
+        <Diametr field="Типоразмер" preprocess="divide" divider="/" delta="2" />
+        <Width field="Типоразмер" preprocess="divide" divider="/" delta="0" />
+        <Height field="Типоразмер" preprocess="divide" divider="/" delta="1" />
+
+        <IndexN field="Индексы" preprocess="indexn"/>
+        <IndexS field="Индексы" preprocess="word"/>
+        <Vehicle default="car"/>
+        <Stock stock="spb" field_qty="кол-во" field_cost="Цена"/>
+    </Tyres>
+</options>

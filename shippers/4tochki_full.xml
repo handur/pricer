@@ -1,0 +1,63 @@
+<options>
+    <Tyres item="tires" vid="2" bundle="shina" entityType="shina_razmer">
+        <Name field="name"/>
+        <GTIN field="gtin"/>
+        <VendorCode field="cae" preprocess="cleancode"/>
+        <ShipperCode field="cae" preprocess="cleancode"/>
+        <Brand field="brand"/>
+
+        <Model field="model" preprocess="cleanword">
+            <process conditionfield="brand" conditionvalue="Yokohama" remove="Studless"/>
+            <process conditionfield="brand" conditionvalue="Yokohama" remove="Stud"/>
+        </Model>
+
+
+        <Diametr field="diameter" preprocess="digit" convertType="float"/>
+        <Width field="width" convertType="float"/>
+        <Height field="height" convertType="float"/>
+        <Season field="season" convertType="custom">
+            <convert from="Зимняя" to="зимняя"/>
+            <convert from="Летняя" to="летняя"/>
+            <convert from="Всесезонная" to="всесезонная"/>
+        </Season>
+
+        <Pin field="is_studded" convertType="custom">
+            <convert from="не шип" to="0"/>
+            <convert from="шип" to="1"/>
+        </Pin>
+        <IndexN field="load_index"/>
+        <IndexS field="speed_index"/>
+        <Vehicle field="tiretype" convertType="custom">
+            <convert from="Легковая" to="car"/>
+            <convert from="Грузовая" to="truck"/>
+            <convert from="Спецшина" to="truck"/>
+            <convert from="Мотошина" to="moto"/>
+        </Vehicle>
+
+        <Runflat field="runflat" convertType="custom">
+            <convert from="Да" to="1"/>
+        </Runflat>
+
+    </Tyres>
+    <Wheels item="rims" vid="3" bundle="disk" entityType="disk_razmer">
+        <Name field="name"/>
+        <GTIN field="gtin"/>
+        <VendorCode field="cae" preprocess="cleancode"/>
+        <ShipperCode field="cae" preprocess="cleancode"/>
+        <Brand field="brand"/>
+        <Model field="model" preprocess="cleanword"/>
+        <Diametr field="diameter" preprocess="digit" convertType="float"/>
+        <Width field="width" convertType="float"  preprocess="digit"/>
+        <Krep field="bolts_count"  preprocess="digit"/>
+        <PCD field="bolts_spacing"  preprocess="digit"/>
+        <ET field="et"  preprocess="digit"/>
+        <DIA field="dia"  preprocess="digit"/>
+        <Color field="color"/>
+        <Type field="rim_type"  convertType="custom">
+            <convert from="0" to="Литой"/>
+            <convert from="2" to="Кованый"/>
+            <convert from="1" to="Штампованный"/>
+        </Type>
+
+    </Wheels>
+</options>

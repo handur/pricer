@@ -1,0 +1,26 @@
+<options>
+    <Wheels item="Диск">
+        <Name field="Наименование"/>
+        <VendorCode field="АртикулСЛИК" preprocess="cleancode" ifemptyField="Артикул"/>
+        <ShipperCode field="Артикул" preprocess="cleancode"/>
+        <Brand field="Бренд"/>
+        <Model field="Модель" preprocess="cleanword"/>
+
+        <Diametr field="Диаметр" preprocess="digit" convertType="float"/>
+        <Width field="Ширина" convertType="float"/>
+        <Krep field="PCD"  preprocess="divide" divider="x" delta="0" convertType="digit"/>
+        <PCD field="PCD" preprocess="divide" divider="x" delta="1" convertType="digit"/>
+        <ET field="Вылет" convertType="digit"/>
+        <DIA field="DIA" convertType="digit"/>
+        <Color field="Цвет"/>
+
+        <Type field="Модификация" convertType="custom">
+            <convert from="Литой" to="Литой"/>
+            <convert from="Кованый" to="Кованый"/>
+            <convert from="Штампованный" to="Штампованный"/>
+        </Type>
+        <Image field="СсылкаНаФото"/>
+        <Stock stock="spb" field_qty="КоличествоСПБ" field_cost="Цена1"/>
+        <Stock stock="msk" field_qty="КоличествоМСК" field_cost="Цена1"/>
+    </Wheels>
+</options>

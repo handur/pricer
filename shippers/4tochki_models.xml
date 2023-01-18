@@ -1,0 +1,17 @@
+<options>
+    <Tyres item="tires" vid="2" bundle="shina" entityType="shina_razmer">
+        <Name field="name"/>
+        <VendorCode field="cae" preprocess="cleancode"/>
+        <Brand field="brand"/>
+        <BrandTerm field="brand" convertType="taxonomy"/>
+        <Model field="model" preprocess="cleanword"/>
+        <ModelNode field="model" preprocess="cleanword" convertType="node"/>
+        <SeasonTerm field="season" convertType="custom">
+            <convert from="Зимняя" to="28119"/>
+            <convert from="Летняя" to="28118"/>
+            <convert from="Всесезонная" to="28520"/>
+        </SeasonTerm>
+        <VehicleTerm default="28422"/>
+        <Image field="img_big_my"/>
+    </Tyres>
+</options>

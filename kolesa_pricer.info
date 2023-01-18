@@ -1,0 +1,19 @@
+package = Kolesa Pricer
+name = Kolesa Price module
+description = "Price update"
+core = 7.x
+
+; Information added by drupal.org packaging script on 2013-08-11
+version = "7.x-1.0"
+core = "7.x"
+project = "kolesa_pricer"
+datestamp = "1376197514"
+files[] = includes/Format.php
+files[] = includes/Method.php
+files[] = includes/CSVFormat.php
+files[] = includes/XMLFormat.php
+files[] = includes/FTPMethod.php
+files[] = includes/URLMethod.php
+files[] = includes/Stock.php
+files[] = includes/Product.php
+

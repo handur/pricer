@@ -1,0 +1,8 @@
+<options>
+    <Tyres>
+        <Name no="3"/>
+        <VendorCode no="0" preprocess="cleancode"/>
+        <ShipperCode no="0" preprocess="cleancode"/>
+        <Stock stock="local_stock" field_qty="6" field_cost="7"/>
+    </Tyres>
+</options>

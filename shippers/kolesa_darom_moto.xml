@@ -1,0 +1,33 @@
+<options>
+
+    <Moto group="moto" >
+        <Name field="name"/>
+        <VendorCode field="vendor_code" preprocess="cleanword"/>
+        <ShipperCode field="product_id" preprocess="cleanword"/>
+
+        <Brand field="maker"/>
+
+        <Model field="categoryname" preprocess="cleanword"/>
+
+        <Diametr field="radius" convertType="float"/>
+        <Width field="shirina_secheniya"  preprocess="digit" convertType="float"/>
+        <Height field="visota_secheniya"  preprocess="digit" convertType="float"/>
+        <Season field="seasonality" convertType="custom">
+            <convert from="Зима" to="зимняя"/>
+            <convert from="Лето" to="летняя"/>
+            <convert from="Всесезонные" to="всесезонная"/>
+        </Season>
+        <Pin field="ship" convertType="custom">
+            <convert from="Нешипованные" to="0"/>
+            <convert from="Шипованные" to="1"/>
+        </Pin>
+        <IndexN field="index_loading"/>
+        <IndexS field="index_speed"/>
+        <Runflat field="runflat" convertType="custom">
+            <convert from="Да" to="1"/>
+        </Runflat>
+        <Vehicle default="moto"/>
+        <Use field="AreaOfUse"/>
+        <Axis field="axis"/>
+    </Moto>
+</options>

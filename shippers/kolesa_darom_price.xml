@@ -1,0 +1,20 @@
+<options>
+    <Tyres group="shina">
+        <Name field="name"/>
+        <VendorCode field="vendor_code" preprocess="cleancode"/>
+        <Brand field="maker"/>
+        <Stock field_stock="stockName" field_qty="stockQuantity" field_cost="priceOpt"/>
+    </Tyres>
+    <Wheels group="disk">
+        <Name field="name"/>
+        <Brand field="maker"/>
+        <VendorCode field="vendor_code" preprocess="cleancode"/>
+        <Stock field_stock="stockName" field_qty="stockQuantity" field_cost="priceOpt"/>
+    </Wheels>
+    <Moto group="moto" >
+        <Name field="name"/>
+        <Brand field="maker"/>
+        <VendorCode field="vendor_code" preprocess="cleanword"/>
+        <Stock field_stock="stockName" field_qty="stockQuantity" field_cost="priceOpt"/>
+    </Moto>
+</options>

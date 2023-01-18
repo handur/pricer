@@ -1,0 +1,16 @@
+<options>
+    <Tyres>
+        <Name field="Код производителя"/>
+        <VendorCode field="Код производителя" preprocess="cleancode"/>
+        <Brand field="БРЕНД"/>
+        <Model field="Модель"/>
+        <Diametr field="Размер" preprocess="divide" divider="/" delta="2" />
+        <Width field="Размер" preprocess="divide" divider="/" delta="0" />
+        <Height field="Размер" preprocess="divide" divider="/" delta="1" />
+        <IndexN field="И.Н."/>
+        <IndexS field="И.С."/>
+        <Vehicle default="car"/>
+        <Usil field="XL"/>
+        <Omologation field="Омологация"/>
+    </Tyres>
+</options>

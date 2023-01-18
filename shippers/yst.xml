@@ -1,0 +1,81 @@
+<options>
+    <Tyres item="tyre">
+        <Name field="name"/>
+        <VendorCode field="article" preprocess="cleancode"/>
+        <ShipperCode field="code" preprocess="cleancode"/>
+        <Old field="article" preprocess="checkold" pattern="(_00)"/>
+        <Brand field="brand"  />
+        <Model field="model" preprocess="cleanword" />
+        <Diametr field="diametr" preprocess="digit" convertType="float"/>
+        <Width field="width" convertType="float"/>
+        <Height field="height" convertType="float"/>
+        <Season field="season" convertType="custom">
+            <convert from="winter" to="зимняя"/>
+            <convert from="summer" to="летняя"/>
+            <convert from="allseason" to="всесезонная"/>
+        </Season>
+        <Pin field="thorn"/>
+        <IndexN field="load_index"/>
+        <IndexS field="speed_index"/>
+        <Runflat field="runflat"/>
+        <Tipts field="type">
+            <include>Легковые летние</include>
+            <include>Легковые зимние</include>
+            <include>Нешипуемые легковые</include>
+            <include>Шипованные легковые</include>
+            <include>Нешипуемые легкогрузовые</include>
+            <include>Шипованные легкогрузовые</include>
+            <include>Легкогрузовые летние</include>
+            <include>Легкогрузовые зимние</include>
+            <include>Грузовые</include>
+            <include>Грузовые и спецтехника</include>
+        </Tipts>
+        <Vehicle field="type" convertType="custom">
+            <convert from="Легковые летние" to="car"/>
+            <convert from="Легковые зимние" to="car"/>
+            <convert from="Нешипуемые легковые" to="car"/>
+            <convert from="Шипованные легковые" to="car"/>
+            <convert from="Нешипуемые легкогрузовые" to="bus"/>
+            <convert from="Шипованные легкогрузовые" to="bus"/>
+            <convert from="Легкогрузовые летние" to="bus"/>
+            <convert from="Легкогрузовые зимние" to="bus"/>
+            <convert from="Грузовые" to="truck"/>
+            <convert from="Грузовые и спецтехника" to="truck"/>
+        </Vehicle>
+        <Image field="picture"/>
+        <Stock stock="yar" field_qty="restyar" field_cost="price_b2b"/>
+        <Stock stock="spb" field_qty="restspb" field_cost="price_b2b"/>
+        <Stock stock="ekb" field_qty="restekb" field_cost="price_b2b"/>
+        <Stock stock="rnd" field_qty="restrnd" field_cost="price_b2b"/>
+        <Stock stock="msk" field_qty="restmsk" field_cost="price_b2b"/>
+    </Tyres>
+    <Wheels item="disk">
+        <Name field="name"/>
+        <VendorCode field="code" preprocess="cleancode"/>
+        <ShipperCode field="article" preprocess="cleancode"/>
+        <Brand field="brand">
+            <exclude>РаспродажаУценка</exclude>
+            <exclude>Распродажа</exclude>
+            <exclude>Replica</exclude>
+        </Brand>
+        <Model field="model" preprocess="cleanword"/>
+
+        <Diametr field="diametr" preprocess="digit" convertType="float"/>
+        <Width field="width" convertType="float" preprocess="digit"/>
+        <Color field="color"/>
+
+        <Krep field="bolts_count"  preprocess="digit"/>
+        <PCD field="bolts_spacing"  preprocess="digit"/>
+        <ET field="et"  preprocess="digit"/>
+        <DIA field="dia"  preprocess="digit"/>
+        <Image field="picture"/>
+        <Weight field="weight"/>
+        <Volume field="volume"/>
+
+        <Stock stock="yar" field_qty="restyar" field_cost="price"/>
+        <Stock stock="spb" field_qty="restspb" field_cost="price"/>
+        <Stock stock="ekb" field_qty="restekb" field_cost="price"/>
+        <Stock stock="rnd" field_qty="restrnd" field_cost="price"/>
+        <Stock stock="msk" field_qty="restmsk" field_cost="price"/>
+    </Wheels>
+</options>

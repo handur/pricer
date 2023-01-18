@@ -1,0 +1,22 @@
+<options>
+    <Krep>
+        <Name field="Номенклатура" concat="Производитель крепежа#Код производителя"/>
+        <VendorCode field="Код производителя" preprocess="cleancode"/>
+        <ShipperCode field="Артикул" preprocess="cleancode"/>
+        <Brand field="Производитель крепежа"/>
+        <Model field="Номенклатура"/>
+        <TypeKrep field="Номенклатура"/>
+        <Description field="Тип крепежа"/>
+        <Length field="Длина общая"/>
+        <Thread field="Длина резьбы"/>
+        <KeySize field="Размер под ключ"/>
+        <Form field="Форма"/>
+        <Package field="Упаковка"/>
+        <Amount field="Количество в упаковке"/>
+        <Color field="Цвет"/>
+        <Country field="Страна"/>
+        <Image field="Image"/>
+        <Stock stock="spb" field_qty="Остаток СПБ" field_cost="Базовая цена"/>
+        <Stock stock="msk" field_qty="Остаток МСК" field_cost="Базовая цена"/>
+    </Krep>
+</options>

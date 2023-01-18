@@ -1,0 +1,73 @@
+<options>
+    <Tyres group="TYRE" >
+        <Name field="SMODIFNAME"/>
+        <VendorCode field="SMNFCODE" preprocess="cleancode"/>
+        <ShipperCode field="NNOMMODIF" preprocess="cleancode"/>
+        <Brand field="SMARKA"/>
+        <Model field="SMODEL" preprocess="cleanword" />
+        <Diametr field="SDIAMETR" preprocess="removecomma2" convertType="float"/>
+        <Width field="SWIDTH" preprocess="removecomma2" convertType="float"/>
+        <Height field="SHEIGHT" convertType="float"/>
+        <Season field="SSEASON" convertType="custom">
+            <convert from="Зимняя" to="зимняя"/>
+            <convert from="Летняя" to="летняя"/>
+            <convert from="Всесезонная" to="всесезонная"/>
+        </Season>
+
+        <Pin field="STHORNING" convertType="custom">
+            <convert from="н/ш." to="0"/>
+            <convert from="Ш." to="1"/>
+        </Pin>
+        <IndexN field="SLOAD"/>
+        <IndexS field="SSPEED"/>
+        <Runflat field="RUNFLAT" convertType="custom">
+            <convert from="Run Flat" to="1"/>
+        </Runflat>
+        <Tipts  default="Легковая"/>
+        <Vehicle default="car"/>
+        <Usil field="POWERLOAD"/>
+        <Image field="SPICTURE"/>
+        <Stock field_stock="TERRITORY_NAME" field_qty="NREST" field_cost="NPRICE_PREPAYMENT"/>
+    </Tyres>
+    <Truck group="TRUCK_TYRE">
+        <Name field="SMODIFNAME"/>
+        <VendorCode field="SMNFCODE" preprocess="cleancode"/>
+        <ShipperCode field="NNOMMODIF" preprocess="cleancode"/>
+        <Brand field="SMARKA"/>
+        <Model field="SMODEL" preprocess="cleanword" />
+        <Diametr field="STIREDIAM" preprocess="digit" convertType="float"/>
+        <Width field="STIREWIDTH" convertType="float"/>
+        <Height field="STIRERATIO" convertType="float"/>
+        <Season default="всесезонная"/>
+        <IndexN field="SLOAD"/>
+        <IndexS field="SSPEED"/>
+        <Runflat field="RUNFLAT" convertType="custom">
+            <convert from="Run Flat" to="1"/>
+        </Runflat>
+        <Tipts  default="Грузовая"/>
+        <Vehicle default="truck"/>
+        <Usil field="POWERLOAD"/>
+        <Image field="SPICTURE"/>
+        <Stock field_stock="TERRITORY_NAME" field_qty="NREST" field_cost="NPRICE_PREPAYMENT"/>
+    </Truck>
+    <Wheels group="DISK">
+        <Name field="SMODIFNAME"/>
+        <VendorCode field="SMNFCODE" preprocess="cleancode"/>
+        <ShipperCode field="NNOMMODIF" preprocess="cleancode"/>
+        <Brand field="SMARKA"/>
+        <Model field="SMODEL" ifemptyField="SMARKA"/>
+        <Diametr field="SDIAMETR" preprocess="digit" convertType="float"/>
+        <Width field="SWIDTH" preprocess="removecomma2" convertType="float"/>
+        <Krep field="SHOLESQUANT" preprocess="removecomma2"/>
+        <PCD field="SPCD" preprocess="removecomma2"/>
+        <ET field="SWHEELOFFSET" preprocess="removecomma2"/>
+        <DIA field="SDIA"/>
+        <Color field="SCOLOR"/>
+        <Type field="STYPE" convertType="custom">
+            <convert from="Лит." to="Литой"/>
+            <convert from="Штамп." to="Штампованный"/>
+        </Type>
+        <Image field="SPICTURE"/>
+        <Stock field_stock="TERRITORY_NAME" field_qty="NREST" field_cost="NPRICE_PREPAYMENT"/>
+    </Wheels>
+</options>

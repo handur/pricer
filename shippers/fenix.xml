@@ -1,0 +1,13 @@
+<options>
+    <Tyres>
+        <Name field="Номенклатура"/>
+        <VendorCode field="Артикул" preprocess="cleancode"/>
+        <ShipperCode field="Код" preprocess="cleancode"/>
+        <Brand field="Номенклатура" preprocess="findbrand" brands="KAMA,KAMA,КАМА,Кама,Forward,АШК,CORDIANT,Viatti"/>
+        <Model field="Номенклатура" preprocess="cleanbrand,cleanfirst,remove" firstcount="2" filter="шип|б\/к|с кам|\."/>
+        <Width  field="Номенклатура" preprocess="getrazmer"  pattern="/[0-9^\/]+[\/[0-9^\s]+]*R[0-9]+/" razmer="0"/>
+        <Height  field="Номенклатура" preprocess="getrazmer" pattern="/[0-9^\/]+\/[0-9^\s]+R[0-9]+/" razmer="1"/>
+        <Diametr field="Номенклатура" preprocess="getrazmer" pattern="/R[0-9]+/" razmer="0"/>
+        <Stock stock="local_stock" field_qty="4" field_cost="3"/>
+    </Tyres>
+</options>

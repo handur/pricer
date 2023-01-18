@@ -1,0 +1,25 @@
+<options>
+    <Tyres>
+        <Name field="НаименованиеПолное"/>
+        <VendorCode field="Артикул" preprocess="cleancode"/>
+        <ShipperCode field="Код1С" preprocess="cleancode"/>
+        <Brand field="Изготовитель"/>
+        <Model field="Модельшины"/>
+        <Diametr field="Диаметр" convertType="float"/>
+        <Width field="Ширинапрофиля" convertType="float"/>
+        <Height field="Высотапрофиля" convertType="float"/>
+        <Season field="Сезонность" convertType="custom">
+                <convert from="зима" to="зимняя"/>
+                <convert from="лето" to="летняя"/>
+                <convert from="всесез" to="всесезонная"/>
+        </Season>
+        <IndexN field="Индекснагрузки"/>
+        <IndexS field="Индексскорости"/>
+        <Vehicle default="car"/>
+        <Pin field="Шипы" convertType="custom">
+            <convert from="Нет" to="0"/>
+            <convert from="Да" to="1"/>
+        </Pin>
+        <Stock stock="spb" field_qty="Наличие" field_cost="ЦенаКлиенту"/>
+    </Tyres>
+</options>

@@ -1,0 +1,7 @@
+<options>
+    <Tyres>
+        <VendorCode no="1" preprocess="cleanword"/>
+        <Name no="2"/>
+        <Country no="19"/>
+    </Tyres>
+</options>

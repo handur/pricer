@@ -1,0 +1,25 @@
+<options>
+    <Tyres item="tyre">
+        <Name field="title"/>
+        <VendorCode field="article" preprocess="cleancode"/>
+        <ShipperCode field="id" preprocess="cleancode"/>
+        <Brand field="brand"/>
+        <Model field="model" preprocess="cleanword"/>
+        <Diametr field="d" preprocess="digit" convertType="float"/>
+        <Width field="w" convertType="float"/>
+        <Height field="h" convertType="float"/>
+        <Season field="season" convertType="custom">
+            <convert from="Зимняя" to="зимняя"/>
+            <convert from="Летняя" to="летняя"/>
+            <convert from="Всесезонная" to="всесезонная"/>
+        </Season>
+        <Vehicle default="car"/>
+        <Pin field="spikes" convertType="custom">
+            <convert from="Нет" to="0"/>
+            <convert from="Да" to="1"/>
+        </Pin>
+        <IndexN field="index_load"/>
+        <IndexS field="index_speed"/>
+        <Stock stock="spb" field_qty="Количество" field_cost="b2b"/>
+    </Tyres>
+</options>

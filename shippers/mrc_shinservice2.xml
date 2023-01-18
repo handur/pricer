@@ -1,0 +1,8 @@
+<options>
+        <Tyres>
+                <VendorCode field="Артикул" preprocess="cleanword"/>
+                <Brand no="5" preprocess="cleanword"/>
+                <Name field="Размер и Модель"/>
+                <Stock stock="mrc" field_cost="11"/>
+        </Tyres>
+</options>

@@ -1,0 +1,84 @@
+.mapping-table td .warning{
+    border:3px solid red;
+}
+.exist{
+    display:inline-block;
+    line-height:1em;
+    border-radius:15px;
+    background-color: green;
+    color:#fff;text-align:center;
+    font-size:11px;font-weight:bold;
+    padding:0px 10px;
+}
+ul.pager{
+    display:block;
+    margin-top:20px !important;
+    padding:40px 0px !important;
+    border-top:1px solid #ddd;
+}
+ul.pager li.pager-item{
+    padding:0px;
+
+}
+ul.pager li > a, ul.pager li.pager-current{
+    border:1px solid #ddd;
+    display:inline-block;
+    padding:15px;
+    font-size:14px;
+    line-height:14px;
+}
+
+ul.pager li.pager-current{
+    background-color:#f4f4f4;
+}
+
+#kolesa-pricer-shipper-list-form .shipper-ops{
+    display:flex;
+    flex-direction: column;
+}
+#kolesa-pricer-add-shipper-form .setup-wrapper{
+    max-width:300px;
+}
+#kolesa-pricer-add-shipper-form  .form-item > label{
+    font-size:12px;
+}
+#kolesa-pricer-log-form .date-padding .form-item > label{
+    display:none;
+}
+.pricer_log_table span.element-type{
+    display:inline-block;
+    padding:3px 5px;
+    margin:-3px -5px -3px -5px;
+    border-radius: 3px;
+    line-height:12px;
+    background-color: #d5d5d5;
+}
+.pricer_log_table span.element-type.value-error{
+    background-color: red;
+    color:#fff;
+}
+
+.tabledrag-processed a.tabledrag-handle .handle{
+    height:30px;
+    width:30px;
+    box-sizing: content-box;
+}
+table.stock-list-table{
+
+}
+table.stock-list-table td,table.stock-list-table th{
+    padding:3px 5px; font-size:10px;
+    line-height:12px;
+}
+
+.page-admin table.small{
+font-size:11px;
+    line-height:13px;
+}
+.page-admin table.small td{
+    padding: 3px 5px;
+}
+
+.add-code-form > div{
+    display:flex;
+}
